@@ -4,7 +4,7 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "plugin:@next/next/recommended", "airbnb", "prettier"],
+  "extends": ["plugin:react/recommended", "plugin:@next/next/recommended", "airbnb", "airbnb-typescript", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -12,18 +12,18 @@
     },
     "ecmaVersion": 12,
     "requireConfigFile": false,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
   "plugins": ["react", "prettier"],
   "rules": {
-    "import/no-extraneous-dependencies": [
-      "error",
-      { "devDependencies": true, "optionalDependencies": false, "peerDependencies": false }
-    ],
+    "import/no-extraneous-dependencies": "off",
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
+    "@typescript-eslint/naming-convention": "off",
     "react/forbid-prop-types": "off",
+    "no-param-reassign": "off",
     "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "react/require-default-props": [
       "error",
@@ -31,5 +31,16 @@
         "ignoreFunctionalComponents": true
       }
     ]
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": ["./tsconfig.json"]
+      }
+    }
   }
 }

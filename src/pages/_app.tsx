@@ -4,8 +4,25 @@ import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
 import { Provider as StoreProvider } from 'react-redux';
+import FrontendTracer from '@utils/telemetry/FrontendTracer';
+import { getCookie } from 'cookies-next';
 
 import store from '@store/index';
+
+declare global {
+  interface Window {
+    ENV: {
+      NEXT_PUBLIC_PLATFORM?: string;
+      NEXT_PUBLIC_OTEL_SERVICE_NAME?: string;
+      NEXT_PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT?: string;
+    };
+  }
+}
+
+if (typeof window !== 'undefined') {
+  const collector = getCookie('otelCollectorUrl')?.toString() || '';
+  FrontendTracer(collector);
+}
 
 export default function App({ Component, pageProps }: AppProps) {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({

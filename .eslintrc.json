@@ -4,7 +4,7 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "plugin:@next/next/recommended", "airbnb", "prettier"],
+  "extends": ["plugin:react/recommended", "plugin:@next/next/recommended", "airbnb", "airbnb-typescript", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -12,7 +12,8 @@
     },
     "ecmaVersion": 12,
     "requireConfigFile": false,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
   "plugins": ["react", "prettier"],
   "rules": {

@@ -3,6 +3,9 @@ import Head from 'next/head';
 import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core';
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
+import { Provider as StoreProvider } from 'react-redux';
+
+import store from '@store/index';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -29,7 +32,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
-            <Component {...pageProps} />
+            <StoreProvider store={store}>
+              <Component {...pageProps} />
+            </StoreProvider>
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

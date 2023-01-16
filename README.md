@@ -43,7 +43,7 @@ theme config: https://mantine.dev/guides/dark-theme/
 
 #### Store
 
-global state manager based on redux/toolkit, you can find more information on redux/toolkit's documentation: https://redux-toolkit.js.org/
+Global state manager based on redux/toolkit, you can find more information on redux/toolkit's documentation: https://redux-toolkit.js.org/
 
 #### Notifications
 

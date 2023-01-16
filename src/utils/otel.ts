@@ -6,23 +6,24 @@ import { getWebAutoInstrumentations } from '@opentelemetry/auto-instrumentations
 import { Resource } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+import { trace } from '@opentelemetry/api';
 
-const { NEXT_PUBLIC_OTEL_SERVICE_NAME = '', NEXT_PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT = '' } =
-  typeof window !== 'undefined' ? window.ENV : {};
+const OTEL_SERVICE_NAME = process.env.NEXT_PUBLIC_OTEL_SERVICE_NAME || 'cf-pages';
+const OTEL_HTTP_ENDPOINT = process.env.NEXT_PUBLIC_OTEL_HTTP_ENDPOINT || 'https://otelhttp.g.ds.cc/v1/traces';
 
-const FrontendTracer = async (collectorString: string) => {
+const otelTracer = async () => {
   const { ZoneContextManager } = await import('@opentelemetry/context-zone');
 
   const provider = new WebTracerProvider({
     resource: new Resource({
-      [SemanticResourceAttributes.SERVICE_NAME]: NEXT_PUBLIC_OTEL_SERVICE_NAME,
+      [SemanticResourceAttributes.SERVICE_NAME]: OTEL_SERVICE_NAME,
     }),
   });
 
   provider.addSpanProcessor(
     new SimpleSpanProcessor(
       new OTLPTraceExporter({
-        url: NEXT_PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT || collectorString || 'http://localhost:4318/v1/traces',
+        url: OTEL_HTTP_ENDPOINT,
       })
     )
   );
@@ -41,7 +42,6 @@ const FrontendTracer = async (collectorString: string) => {
     instrumentations: [
       getWebAutoInstrumentations({
         '@opentelemetry/instrumentation-fetch': {
-          propagateTraceHeaderCorsUrls: /.*/,
           clearTimingResources: true,
           applyCustomAttributesOnSpan(span) {
             span.setAttribute('app.synthetic_request', 'false');
@@ -52,4 +52,8 @@ const FrontendTracer = async (collectorString: string) => {
   });
 };
 
-export default FrontendTracer;
+const getTracer = (service: string) => {
+  return trace.getTracer(service);
+};
+
+export { getTracer, otelTracer };

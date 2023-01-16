@@ -1,8 +1,13 @@
 // deps
 import { configureStore } from '@reduxjs/toolkit';
 
+// example
+import counterSlice from './reducers/counterExample';
+
 const store = configureStore({
-  reducer: {},
+  reducer: {
+    counterState: counterSlice
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

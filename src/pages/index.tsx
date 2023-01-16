@@ -2,7 +2,7 @@ import { Group, Container, createStyles, Switch, useMantineColorScheme, useManti
 import Head from 'next/head';
 import { IconSun, IconMoon } from '@tabler/icons';
 import { useCallback } from 'react';
-import { showNotification } from "@mantine/notifications";
+import { showNotification } from '@mantine/notifications';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@store/index';
 import { increase, decrease, setCountValue } from '@store/reducers/counterExample';
@@ -34,17 +34,17 @@ export function ThemeToggle() {
 function NotificationsButton() {
   const showNotificationExample = useCallback(() => {
     showNotification({
-      title: "Notify",
-      message: "Hello, have a nice day~",
-      color: "violet"
+      title: 'Notify',
+      message: 'Hello, have a nice day~',
+      color: 'violet',
     });
   }, []);
 
   return (
-    <Group position='center'>
-      <Button onClick={ showNotificationExample }>Show notification</Button>
+    <Group position="center">
+      <Button onClick={showNotificationExample}>Show notification</Button>
     </Group>
-  )
+  );
 }
 
 function ReduxExample() {
@@ -52,15 +52,15 @@ function ReduxExample() {
   const dispatch = useDispatch();
 
   return (
-    <Group position='center' my={30}>
-      <div>value: { counterState.count }</div>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <Button onClick={ () => dispatch(increase()) }>increase</Button>
-        <Button onClick={ () => dispatch(decrease()) }>decrease</Button>
-        <Button onClick={ () => dispatch(setCountValue(0)) }>reset</Button>
+    <Group position="center" my={30}>
+      <div>value: {counterState.count}</div>
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Button onClick={() => dispatch(increase())}>increase</Button>
+        <Button onClick={() => dispatch(decrease())}>decrease</Button>
+        <Button onClick={() => dispatch(setCountValue(0))}>reset</Button>
       </div>
     </Group>
-  )
+  );
 }
 
 export default function Index() {

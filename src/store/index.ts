@@ -6,7 +6,7 @@ import counterSlice from './reducers/counterExample';
 
 const store = configureStore({
   reducer: {
-    counterState: counterSlice
+    counterState: counterSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

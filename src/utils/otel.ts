@@ -9,7 +9,7 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { trace } from '@opentelemetry/api';
 
 const OTEL_SERVICE_NAME = process.env.NEXT_PUBLIC_OTEL_SERVICE_NAME || 'cf-pages';
-const OTEL_HTTP_ENDPOINT = process.env.NEXT_PUBLIC_OTEL_HTTP_ENDPOINT || 'https://otelhttp.g.ds.cc/v1/traces';
+const OTEL_HTTP_ENDPOINT = process.env.NEXT_PUBLIC_OTEL_HTTP_ENDPOINT || 'http://localhost:4318/';
 
 const otelTracer = async () => {
   const { ZoneContextManager } = await import('@opentelemetry/context-zone');
@@ -52,8 +52,6 @@ const otelTracer = async () => {
   });
 };
 
-const getTracer = (service: string) => {
-  return trace.getTracer(service);
-};
+const getTracer = (service: string) => trace.getTracer(service);
 
 export { getTracer, otelTracer };

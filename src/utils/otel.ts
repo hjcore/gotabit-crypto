@@ -15,7 +15,7 @@ export let globalTracerProvider: WebTracerProvider | null = null;
 
 export type TraceType = 'auto' | 'custom' | 'prevent';
 
-const getTracer = (service: string) => trace.getTracer(service);
+export const getTracer = (service: string) => trace.getTracer(service);
 
 const sendPreflightRequest = async () => {
   const preflightResult = await fetch(OTEL_HTTP_ENDPOINT, {
@@ -27,7 +27,7 @@ const sendPreflightRequest = async () => {
   return ok;
 };
 
-const otelTracer = async (traceType: TraceType | null = null) => {
+export const otelTracer = async (traceType: TraceType | null = null) => {
   if (traceType === null) return;
   const testFlightSuccess = await sendPreflightRequest();
   if (!testFlightSuccess || traceType === 'prevent') return;
@@ -64,16 +64,7 @@ const otelTracer = async (traceType: TraceType | null = null) => {
   registerInstrumentations({
     tracerProvider: provider,
     instrumentations: [
-      getWebAutoInstrumentations({
-        '@opentelemetry/instrumentation-fetch': {
-          clearTimingResources: true,
-          applyCustomAttributesOnSpan(span) {
-            span.setAttribute('app.synthetic_request', 'false');
-          },
-        },
-      }),
+      getWebAutoInstrumentations(),
     ],
   });
 };
-
-export { getTracer, otelTracer };

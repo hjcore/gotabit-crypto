@@ -8,10 +8,27 @@ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { trace } from '@opentelemetry/api';
 
-const OTEL_SERVICE_NAME = process.env.NEXT_PUBLIC_OTEL_SERVICE_NAME || 'cf-pages';
-const OTEL_HTTP_ENDPOINT = process.env.NEXT_PUBLIC_OTEL_HTTP_ENDPOINT || 'http://localhost:4318/';
+export const OTEL_SERVICE_NAME = process.env.NEXT_PUBLIC_OTEL_SERVICE_NAME || 'cf-pages';
+export const OTEL_HTTP_ENDPOINT = process.env.NEXT_PUBLIC_OTEL_HTTP_ENDPOINT || 'http://localhost:4318/v1/traces';
 
-const otelTracer = async () => {
+const getTracer = (service: string) => trace.getTracer(service);
+
+export const runCustomTracer = () => {
+  const tracer = getTracer(OTEL_SERVICE_NAME);
+  const min = Math.floor(Date.now() / 60000);
+
+  const span = tracer.startSpan('test-key-value' + min);
+  span.setAttribute('key-a', 'value-a');
+  span.setAttribute('key-b', 'value-b');
+  span.setAttribute('key-c', 'value-c');
+  span.end();
+}
+
+const otelTracer = async (traceType: "auto" | "prevent" | "custom" = "auto") => {
+  console.log("traceType", traceType);
+
+  if (traceType === "prevent") return;
+
   const { ZoneContextManager } = await import('@opentelemetry/context-zone');
 
   const provider = new WebTracerProvider({
@@ -37,6 +54,11 @@ const otelTracer = async () => {
     }),
   });
 
+  if (traceType === "custom") return runCustomTracer();
+
+  if (traceType !== "auto") return;
+
+  console.log("start register", traceType);
   registerInstrumentations({
     tracerProvider: provider,
     instrumentations: [
@@ -51,7 +73,5 @@ const otelTracer = async () => {
     ],
   });
 };
-
-const getTracer = (service: string) => trace.getTracer(service);
 
 export { getTracer, otelTracer };

@@ -4,22 +4,15 @@ import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
 import { Provider as StoreProvider } from 'react-redux';
-import { otelTracer } from '@utils/otel';
-
 import store from '@store/index';
+import OtelTracer from '@components/OtelTracer';
 
 declare global {
   interface Window {
     ENV: {
-      NEXT_PUBLIC_PLATFORM?: string;
       NEXT_PUBLIC_OTEL_SERVICE_NAME?: string;
-      NEXT_PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT?: string;
     };
   }
-}
-
-if (typeof window !== 'undefined') {
-  otelTracer();
 }
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -48,6 +41,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
             <StoreProvider store={store}>
+              <OtelTracer />
               <Component {...pageProps} />
             </StoreProvider>
           </NotificationsProvider>

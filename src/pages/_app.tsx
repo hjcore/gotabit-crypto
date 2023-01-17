@@ -4,22 +4,17 @@ import { MantineProvider, ColorSchemeProvider, ColorScheme } from '@mantine/core
 import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
 import { Provider as StoreProvider } from 'react-redux';
-import { otelTracer } from '@utils/otel';
-
 import store from '@store/index';
+import { LocalTraceTypeKey, otelTracer, TraceType } from '@utils/otel';
+import { useCallback, useEffect } from 'react';
+import OtelTracerContext from '../context/otelTracer/otelTracerContext';
 
 declare global {
   interface Window {
     ENV: {
-      NEXT_PUBLIC_PLATFORM?: string;
       NEXT_PUBLIC_OTEL_SERVICE_NAME?: string;
-      NEXT_PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT?: string;
     };
   }
-}
-
-if (typeof window !== 'undefined') {
-  otelTracer();
 }
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -34,6 +29,24 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useHotkeys([['mod+J', () => toggleColorScheme()]]);
 
+  const [traceType, setTraceType] = useLocalStorage<TraceType | null>({
+    key: LocalTraceTypeKey,
+    defaultValue: null,
+    getInitialValueInEffect: true,
+  });
+
+  const mutateTraceType = useCallback(
+    (newTraceType: TraceType) => {
+      if (newTraceType === traceType) return;
+      setTraceType(newTraceType);
+    },
+    [setTraceType, traceType]
+  );
+
+  useEffect(() => {
+    otelTracer(traceType);
+  }, [traceType]);
+
   return (
     <>
       <Head>
@@ -47,9 +60,11 @@ export default function App({ Component, pageProps }: AppProps) {
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
-            <StoreProvider store={store}>
-              <Component {...pageProps} />
-            </StoreProvider>
+            <OtelTracerContext.Provider value={{ traceType, setTraceType: mutateTraceType }}>
+              <StoreProvider store={store}>
+                <Component {...pageProps} />
+              </StoreProvider>
+            </OtelTracerContext.Provider>
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

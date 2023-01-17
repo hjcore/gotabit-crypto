@@ -4,7 +4,7 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "plugin:@next/next/recommended", "airbnb", "airbnb-typescript", "prettier"],
+  "extends": ["plugin:react/recommended", "plugin:@next/next/recommended", "plugin:react-hooks/recommended", "airbnb", "airbnb-typescript", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -22,8 +22,13 @@
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/naming-convention": "off",
+    "no-underscore-dangle": "off",
     "react/forbid-prop-types": "off",
     "no-param-reassign": "off",
+    "consistent-return": "off",
+    "no-multi-assign": "off",
+    "import/no-mutable-exports": "off",
+    "react/jsx-no-constructed-context-values": "off",
     "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "react/require-default-props": [
       "error",

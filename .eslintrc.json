@@ -22,8 +22,10 @@
     "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
     "@typescript-eslint/naming-convention": "off",
+    "no-underscore-dangle": "off",
     "react/forbid-prop-types": "off",
     "no-param-reassign": "off",
+    "consistent-return": "off",
     "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "react/require-default-props": [
       "error",

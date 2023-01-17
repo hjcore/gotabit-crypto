@@ -17,17 +17,15 @@ export const runCustomTracer = () => {
   const tracer = getTracer(OTEL_SERVICE_NAME);
   const min = Math.floor(Date.now() / 60000);
 
-  const span = tracer.startSpan('test-key-value' + min);
+  const span = tracer.startSpan(`test-key-value${min}`);
   span.setAttribute('key-a', 'value-a');
   span.setAttribute('key-b', 'value-b');
   span.setAttribute('key-c', 'value-c');
   span.end();
-}
+};
 
-const otelTracer = async (traceType: "auto" | "prevent" | "custom" = "auto") => {
-  console.log("traceType", traceType);
-
-  if (traceType === "prevent") return;
+const otelTracer = async (traceType: 'auto' | 'prevent' | 'custom' = 'auto') => {
+  if (traceType === 'prevent') return;
 
   const { ZoneContextManager } = await import('@opentelemetry/context-zone');
 
@@ -54,11 +52,10 @@ const otelTracer = async (traceType: "auto" | "prevent" | "custom" = "auto") => 
     }),
   });
 
-  if (traceType === "custom") return runCustomTracer();
+  if (traceType === 'custom') return runCustomTracer();
 
-  if (traceType !== "auto") return;
+  if (traceType !== 'auto') return;
 
-  console.log("start register", traceType);
   registerInstrumentations({
     tracerProvider: provider,
     instrumentations: [

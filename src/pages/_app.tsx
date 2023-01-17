@@ -5,7 +5,9 @@ import { useHotkeys, useLocalStorage } from '@mantine/hooks';
 import { NotificationsProvider } from '@mantine/notifications';
 import { Provider as StoreProvider } from 'react-redux';
 import store from '@store/index';
-import OtelTracer from '@components/OtelTracer';
+import { LocalTraceTypeKey, otelTracer, TraceType } from '@utils/otel';
+import { useCallback, useEffect } from 'react';
+import OtelTracerContext from '../context/otelTracer/otelTracerContext';
 
 declare global {
   interface Window {
@@ -27,6 +29,24 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useHotkeys([['mod+J', () => toggleColorScheme()]]);
 
+  const [traceType, setTraceType] = useLocalStorage<TraceType | null>({
+    key: LocalTraceTypeKey,
+    defaultValue: null,
+    getInitialValueInEffect: true,
+  });
+
+  const mutateTraceType = useCallback(
+    (newTraceType: TraceType) => {
+      if (newTraceType === traceType) return;
+      setTraceType(newTraceType);
+    },
+    [setTraceType, traceType]
+  );
+
+  useEffect(() => {
+    otelTracer(traceType);
+  }, [traceType]);
+
   return (
     <>
       <Head>
@@ -40,10 +60,11 @@ export default function App({ Component, pageProps }: AppProps) {
       <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <NotificationsProvider>
-            <StoreProvider store={store}>
-              <OtelTracer />
-              <Component {...pageProps} />
-            </StoreProvider>
+            <OtelTracerContext.Provider value={{ traceType, setTraceType: mutateTraceType }}>
+              <StoreProvider store={store}>
+                <Component {...pageProps} />
+              </StoreProvider>
+            </OtelTracerContext.Provider>
           </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>

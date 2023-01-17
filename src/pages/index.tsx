@@ -7,6 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@store/index';
 import { increase, decrease, setCountValue } from '@store/reducers/counterExample';
 
+// examples
+import OtelTracer from '@components/OtelTracer';
+
 const useStyles = createStyles(() => ({
   root: {
     paddingTop: 80,
@@ -76,6 +79,7 @@ export default function Index() {
         <ThemeToggle />
         <NotificationsButton />
         <ReduxExample />
+        <OtelTracer />
       </Container>{' '}
     </>
   );

@@ -31,7 +31,6 @@ export default function OtelTracer() {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
     sendPreflightRequest();
     interval.start();
   }, []);

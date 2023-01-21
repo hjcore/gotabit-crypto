@@ -35,7 +35,6 @@ export default function useLocalWallet() {
       }).catch(() => {
         messageDispatcher[mnemonicWordsImportError]();
       });
-      console.log('localWallet', localWalletInstance);
       if (!localWalletInstance) return;
       const accounts = await localWalletInstance.getAccounts();
       const account = accounts[0].address;

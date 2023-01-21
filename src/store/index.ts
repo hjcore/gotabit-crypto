@@ -1,12 +1,12 @@
 // deps
 import { configureStore } from '@reduxjs/toolkit';
 
-// example
-import counterSlice from './reducers/counterExample';
+// reducers
+import localWalletReducer from './reducers/localWalletReducer';
 
 const store = configureStore({
   reducer: {
-    counterState: counterSlice,
+    localWalletState: localWalletReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

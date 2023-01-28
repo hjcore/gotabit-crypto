@@ -1,5 +1,6 @@
-import { Container, createStyles } from '@mantine/core';
+import { Container, createStyles, Divider } from '@mantine/core';
 import LocalWalletViewer from '@components/LocalWalletViewer';
+import CryptoViewer from '@components/CryptoViewer';
 
 const useStyles = createStyles(() => ({
   root: {
@@ -15,6 +16,8 @@ export default function Index() {
     <>
       <Container className={classes.root} my={40}>
         <LocalWalletViewer />
+        <Divider my={20} />
+        <CryptoViewer />
       </Container>{' '}
     </>
   );
